@@ -11,11 +11,7 @@
         <h1>新闻管理</h1>
         <p>发布和管理新闻内容</p>
     </header>
-    <nav>
-        <a href="index.html">返回首页</a>
-        <a href="build.html">发布新闻</a>
-        <a href="reviews.html">评论管理</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <h2>新闻列表</h2>
         <table>
@@ -49,8 +45,14 @@
 <script src="./js/utils.js"></script>
 <script>
     $(function () {
+        init()
         getNewList()
     })
+
+    function init() {
+        var cookie = cookieToJson(document.cookie);
+        $(".nav_menu").html(getNavHtml(cookie));
+    }
 
 
     function getNewList() {
@@ -97,6 +99,7 @@
             data : {
                 nid : nid,
                 uid : cookie.uid,
+                role : cookie.role,
                 username : cookie.username
             },
             dataType: "json",

@@ -1,12 +1,16 @@
 <?php
     include __DIR__."/tools/DB.php";
     include __DIR__."/tools/cors.php";
+    include __DIR__."/tools/authorization.php";
 
     $nid = @$_POST['nid'];
     $uid = @$_POST['uid'];
+    $role = @$_POST['role'];
     $title = @$_POST['title'];
     $context = @$_POST['context'];
     $newImg = @$_POST['newImg'];
+
+    authorization($uid, $role);
 
     if (isset($nid) && !empty($nid)) {
         $sql = "update new set title = '$title',context = '$context',newImg = '$newImg',time = NOW() where id = '$nid' and uid = '$uid'";

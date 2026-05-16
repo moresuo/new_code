@@ -11,13 +11,7 @@
         <h1>留言板</h1>
         <p class="note">[!] 此页面内容未经任何过滤，直接输出，用于演示存储型XSS攻击</p>
     </header>
-    <nav>
-        <a href="index.html">首页</a>
-        <a href="vulns.html">漏洞中心</a>
-        <a href="messages.html">留言板</a>
-        <a href="search_demo.html">SQL注入</a>
-        <a href="profile.html">越权演示</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <div class="warning">
             [!] 漏洞说明：留言内容无过滤直接写入数据库，前端使用 innerHTML 渲染，可执行任意 JavaScript 代码。尝试提交 <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
@@ -46,6 +40,8 @@
 <script src="./js/utils.js"></script>
     <script>
         $(function(){
+            var cookie = cookieToJson(document.cookie);
+            $(".nav_menu").html(getNavHtml(cookie));
             loadMessages();
             $(".send-btn").click(function(){
                 var name = $("#name").val();

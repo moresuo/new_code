@@ -14,9 +14,7 @@
         <h1>文件管理</h1>
         <p>上传、查看和管理服务器文件</p>
     </header>
-    <nav>
-        <a href="index.html">返回首页</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <h2>文件列表</h2>
         <ul class="file-list">
@@ -43,6 +41,8 @@
 <script src="./js/utils.js"></script>
 <script>
     $(function ($) {
+        var cookie = cookieToJson(document.cookie)
+        $(".nav_menu").html(getNavHtml(cookie));
         readFileList()
         $(".upload").click(function () {
             // 手动创建表单对象
@@ -50,6 +50,8 @@
             let file = $(".file")[0].files[0]
             // 向表单对象添加上传的文件
             formData.append("file", file)
+            formData.append("uid", cookie.uid)
+            formData.append("role", cookie.role)
             // 向后端传递参数
             $.ajax({
                 url: API_BASE + "/upload.php",
@@ -77,6 +79,7 @@
     })
 
     function deleteFileByName(filename) {
+        let cookie = cookieToJson(document.cookie)
         $.ajax({
             url: API_BASE + "/deleteFileByName.php",
             type: "GET",
@@ -84,7 +87,9 @@
                 withCredentials: true,
             },
             data : {
-                filename : filename
+                filename : filename,
+                uid : cookie.uid,
+                role : cookie.role
             },
             dataType: "json",
             success: (response) => {
@@ -101,11 +106,16 @@
         })
     }
     function readFileList() {
+        let cookie = cookieToJson(document.cookie)
         $.ajax({
             url: API_BASE + "/fileList.php",
             type: "GET",
             xhrFields: { // AJAX 携带cookie !!!
                 withCredentials: true,
+            },
+            data: {
+                uid: cookie.uid,
+                role: cookie.role
             },
             dataType: "json",
             success: (response) => {

@@ -13,10 +13,7 @@
         <h1>添加用户</h1>
         <p>创建新的系统用户账户</p>
     </header>
-    <nav>
-        <a href="index.html">返回首页</a>
-        <a href="users.html">用户管理</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <h2>添加新用户</h2>
         <form>
@@ -50,7 +47,8 @@
 <script src="./js/utils.js"></script>
 <script>
     $(function () {
-        let cookie = cookieToJson(document.cookie);
+        var cookie = cookieToJson(document.cookie);
+        $(".nav_menu").html(getNavHtml(cookie));
         $(".adduser").click(function () {
             $.ajax({
                 url: API_BASE + "/addUser.php",
@@ -61,17 +59,18 @@
                 data: {
                     username: $("#username").val(),
                     email: $("#email").val(),
-                    role: $("#role").val(),
+                    role: cookie.role,
+                    newRole: $("#role").val(),
                     password: $("#password").val(),
                     passwordtoo: $("#confirm_password").val(),
-                    operatorUid: cookie.uid,
+                    uid: cookie.uid,
                     operatorName: cookie.username
                 },
                 dataType: "json",
                 success: (response) => {
                     if (response.status == 200) {
                         alert(response.msg)
-                        location = "users.html"
+                        setTimeout(function(){ location = "users.html"; }, 1500)
                     } else {
                         alert(response.msg)
                     }

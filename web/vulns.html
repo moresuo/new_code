@@ -11,16 +11,7 @@
         <h1>漏洞演示中心</h1>
         <p>网络安全靶场 — 仅供安全测试学习使用</p>
     </header>
-    <nav>
-        <a href="index.html">首页</a>
-        <a href="vulns.html">漏洞中心</a>
-        <a href="messages.html">留言板</a>
-        <a href="search_demo.html">SQL注入</a>
-        <a href="upload_demo.html">文件上传</a>
-        <a href="download.html">文件下载</a>
-        <a href="template_demo.html">文件包含</a>
-        <a href="profile.html">越权演示</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
 
         <div class="section">
@@ -133,5 +124,14 @@
         </div>
     </div>
     <footer>版权所有 © 2024 新闻网站 | 网络安全靶场</footer>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/utils.js"></script>
+    <script>
+        $(function(){
+            var cookie = cookieToJson(document.cookie);
+            $(".nav_menu").html(getNavHtml(cookie));
+        });
+    </script>
 </body>
 </html>

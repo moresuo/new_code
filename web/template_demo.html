@@ -11,12 +11,7 @@
         <h1>文件包含 (LFI)</h1>
         <p class="note">本地文件包含漏洞演示 — page参数直接拼入include语句</p>
     </header>
-    <nav>
-        <a href="index.html">首页</a>
-        <a href="vulns.html">漏洞中心</a>
-        <a href="download.html">文件下载</a>
-        <a href="template_demo.html">文件包含</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <div class="tips">
             <h3>常用测试路径（会自动追加 .php 后缀）：</h3>
@@ -45,6 +40,8 @@
 <script src="./js/utils.js"></script>
     <script>
         $(function(){
+            var cookie = cookieToJson(document.cookie);
+            $(".nav_menu").html(getNavHtml(cookie));
             $(".include-btn").click(function(){
                 var p = $("#pageInput").val();
                 if (!p) { alert("请输入page参数"); return; }

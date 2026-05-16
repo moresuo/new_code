@@ -153,7 +153,7 @@ function showToast(msg, type) {
         if (toast.parentNode) {
             toast.parentNode.removeChild(toast);
         }
-    }, 3500);
+    }, 5000);
 }
 
 /** 覆写原生 alert — 使用自定义模态弹窗 */

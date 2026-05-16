@@ -4,6 +4,12 @@
     // require require_once  
     // 导入其他文件 once表示只导入一次
     include __DIR__ . "/tools/cors.php";
+    include __DIR__ . "/tools/authorization.php";
+
+    $uid = @$_POST['uid'];
+    $role = @$_POST['role'];
+
+    authorization($uid, $role);
 
     // 文件数组解构
     $file = @$_FILES['file'];

@@ -1,10 +1,14 @@
 <?php
     include __DIR__."/tools/DB.php";
     include __DIR__."/tools/cors.php";
+    include __DIR__."/tools/authorization.php";
 
-    $nid = @$_GET['nid'];
     $uid = @$_GET['uid'];
+    $role = @$_GET['role'];
+    $nid = @$_GET['nid'];
     $context = @$_GET['context'];
+
+    authorization($uid, $role);
 
     if (isset($nid) && !empty($nid) && isset($uid) && !empty($uid) && isset($context) && !empty($context) ) {
         $sql = "insert into review(nid,uid,context,time) value('$nid','$uid','$context ',NOW())";

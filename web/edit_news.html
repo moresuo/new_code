@@ -13,9 +13,7 @@
         <h1>编辑新闻</h1>
         <p>修改新闻内容和配图</p>
     </header>
-    <nav>
-        <a href="index.html">返回首页</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <h2>编辑新闻内容</h2>
         <form action="#" method="post" enctype="multipart/form-data">
@@ -46,13 +44,16 @@
         // 获得浏览器地址栏的参数
         const params = new URLSearchParams(window.location.search);
         let nid = params.get("nid")
-        let cookie = cookieToJson(document.cookie)
+        var cookie = cookieToJson(document.cookie)
+        $(".nav_menu").html(getNavHtml(cookie));
         $(".file").change(function(){
             // 手动创建表单对象
             let formData = new FormData()
             let file = $(".file")[0].files[0]
             // 向表单对象添加上传的文件
             formData.append("file", file)
+            formData.append("uid", cookie.uid)
+            formData.append("role", cookie.role)
             // 向后端传递参数
             $.ajax({
                 url: API_BASE + "/upload.php",
@@ -89,6 +90,7 @@
                 data: {
                     nid: nid,
                     uid : cookie.uid,
+                    role : cookie.role,
                     title: $("#title").val(),
                     newImg: $(".newsImg").attr("src"),
                     context:  $("#content").val(),
@@ -97,7 +99,7 @@
                 success: (response) => {
                     if (response.status == 200) {
                         alert(response.msg)
-                        location = "news.html"
+                        setTimeout(function(){ location = "news.html"; }, 1500)
                     } else {
                         alert(response.msg)
                     }

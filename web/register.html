@@ -48,6 +48,9 @@
 <script>
     $(function () {
         $("#captcha").attr("src", API_BASE + "/captcha.php");
+        $("#captcha").click(function () {
+            $("#captcha").attr("src", API_BASE + "/captcha.php?t=" + Math.random())
+        })
         $(".register").click(function () {
             $.ajax({
                 url: API_BASE + "/register.php",
@@ -66,7 +69,7 @@
                 success: (response) => {
                     if (response.status == 200) {
                         alert(response.msg)
-                        location = "login.html"
+                        setTimeout(function(){ location = "login.html"; }, 1500)
                     } else {
                         alert(response.msg)
                     }

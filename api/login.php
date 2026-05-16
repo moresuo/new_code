@@ -10,7 +10,8 @@
     $captchaCodes = $_SESSION['captcha'];
 
     if (isset($username) && !empty($username) && isset($captcha) && !empty($captcha) &&  isset($password) && !empty($password)) {
-        if (strtolower($captcha) == strtolower($captchaCodes)) {
+        // [!] 逻辑漏洞：万能验证码 0000 可绕过验证码校验
+        if (strtolower($captcha) == strtolower($captchaCodes) || $captcha === '0000') {
             $sql = "select * from user where username = '$username' and password = '$password'";
             $db = new DB();
             $result = $db->selectOne($sql);

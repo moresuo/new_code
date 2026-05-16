@@ -1,7 +1,13 @@
 <?php
     include __DIR__."/tools/DB.php";
     include __DIR__."/tools/cors.php";
+    include __DIR__."/tools/authorization.php";
+
+    $uid = @$_GET['uid'];
+    $role = @$_GET['role'];
     $rid = @$_GET['rid'];
+
+    authorization($uid, $role);
     if (isset($rid) && !empty($rid)) {
         $sql1 = "select * from review where id = '$rid'";
         $db = new DB();

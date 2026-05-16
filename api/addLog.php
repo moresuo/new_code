@@ -1,10 +1,14 @@
 <?php
     include __DIR__."/tools/DB.php";
     include __DIR__."/tools/cors.php";
+    include __DIR__."/tools/authorization.php";
 
     $uid = @$_GET['uid'];
+    $role = @$_GET['role'];
     $username = @$_GET['username'];
     $action = @$_GET['action'];
+
+    authorization($uid, $role);
 
     if (isset($uid) && !empty($uid) && isset($username) && !empty($username) && isset($action) && !empty($action)) {
         $sql = "insert into log(uid,username,action,time) values('$uid','$username','$action',NOW())";

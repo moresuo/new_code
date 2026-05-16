@@ -11,12 +11,7 @@
         <h1>个人信息</h1>
         <p class="note">[!] 水平越权(IDOR)演示 — 修改uid参数可查看任意用户信息</p>
     </header>
-    <nav>
-        <a href="index.html">首页</a>
-        <a href="vulns.html">漏洞中心</a>
-        <a href="profile.html">越权演示</a>
-        <a href="messages.html">留言板</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <div class="warning">
             [!] 漏洞说明：通过修改URL参数 <code>?uid=xxxx</code> 可查看任意用户的信息（包括admin）。后端无所有权校验，不验证当前登录用户是否有权查看。
@@ -54,6 +49,8 @@
 <script src="./js/utils.js"></script>
     <script>
         $(function(){
+            var cookie = cookieToJson(document.cookie);
+            $(".nav_menu").html(getNavHtml(cookie));
             // 从URL读取uid参数
             var params = new URLSearchParams(window.location.search);
             var uid = params.get("uid");

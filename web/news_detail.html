@@ -13,9 +13,7 @@
         <h1>新闻详情</h1>
         <p>深入了解每一条新闻的背后故事</p>
     </header>
-    <nav>
-        <a href="index.html">返回首页</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <div class="news-articles">
             <div class="news-article">
@@ -51,10 +49,11 @@
 <script src="./js/utils.js"></script>
 <script>
     $(function () {
+        var cookie = cookieToJson(document.cookie)
+        $(".nav_menu").html(getNavHtml(cookie));
         // 获得浏览器地址栏的参数
         const params = new URLSearchParams(window.location.search);
         let nid = params.get("nid")
-        let cookie = cookieToJson(document.cookie)
         getNewInfoById(nid)
         getReviewInfoByNid(nid)
         $(".buildreview").click(function(){
@@ -67,6 +66,7 @@
                 data: {
                     nid: nid,
                     uid: cookie.uid,
+                    role: cookie.role,
                     context : $("#context").val()
                 },
                 dataType: "json",
@@ -114,6 +114,7 @@
         })
     }
     function getReviewInfoByNid(nid) {
+        let cookie = cookieToJson(document.cookie)
         $.ajax({
             url: API_BASE + "/reviewList.php",
             type: "GET",
@@ -121,6 +122,8 @@
                 withCredentials: true,
             },
             data: {
+                uid: cookie.uid,
+                role: cookie.role,
                 nid: nid
             },
             dataType: "json",

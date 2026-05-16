@@ -13,10 +13,7 @@
         <h1>编辑用户</h1>
         <p>修改用户角色和状态信息</p>
     </header>
-    <nav>
-        <a href="index.html">返回首页</a>
-        <a href="users.html">用户管理</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <h2>编辑用户信息</h2>
         <form action="#" method="post">
@@ -53,8 +50,9 @@
         // 获得浏览器地址栏的参数
         const params = new URLSearchParams(window.location.search);
         let uid = params.get("uid")
+        var cookie = cookieToJson(document.cookie)
+        $(".nav_menu").html(getNavHtml(cookie));
         getUserInfoById(uid)
-
         $(".update").click(function () {
             $.ajax({
                 url: API_BASE + "/updateUserById.php",
@@ -63,17 +61,19 @@
                     withCredentials: true,
                 },
                 data: {
-                    uid: uid,
+                    uid: cookie.uid,
+                    role: cookie.role,
+                    id: uid,
                     username: $("#username").val(),
                     email: $("#email").val(),
-                    role:  $("#role").val(),
+                    newRole:  $("#role").val(),
                     status:  $("#status").val()
                 },
                 dataType: "json",
                 success: (response) => {
                     if (response.status == 200) {
                         alert(response.msg)
-                        location = "users.html"
+                        setTimeout(function(){ location = "users.html"; }, 1500)
                     } else {
                         alert(response.msg)
                     }
@@ -86,7 +86,7 @@
     })
     function getUserInfoById(uid) {
         $.ajax({
-            url: API_BASE + "/userList.php",
+            url: API_BASE + "/myInfo.php",
             type: "GET",
             xhrFields: { // AJAX 携带cookie !!!
                 withCredentials: true,
@@ -97,7 +97,7 @@
             dataType: "json",
             success: (response) => {
                 if (response.status == 200) {
-                    let user = response.data[0];
+                    let user = response.data;
                     $("#username").val(user.username);
                     $("#email").val(user.email);
                     $("#role").val(user.role);

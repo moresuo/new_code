@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f01e57b6-5b33-45ec-9719-4c79d85f747f" name="更改" comment="1">
+      <change afterPath="$PROJECT_DIR$/.idea/data_source_mapping.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/72c5c7cc-ad7f-41f7-b981-1a9bbb72f869.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/72c5c7cc-ad7f-41f7-b981-1a9bbb72f869.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/addLog.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/addLog.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/addUser.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/addUser.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/buildReview.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/buildReview.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/deleteFileByName.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/deleteFileByName.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/deleteNewById.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/deleteNewById.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/deleteReviewById.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/deleteReviewById.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/deleteUserById.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/deleteUserById.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/download.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/download.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/fileList.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/fileList.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/logList.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/logList.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/login.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/register.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/register.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/reviewList.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/reviewList.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/template.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/template.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tools/cors.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/tools/cors.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/updateNewById.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/updateNewById.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/updateUserById.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/updateUserById.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/upload.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/upload.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/userList.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/userList.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/add_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/add_user.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/build.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/build.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/css/cyberpunk.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/css/cyberpunk.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/download.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/download.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/edit_news.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/edit_news.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/edit_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/edit_user.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/files.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/files.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/forgot-password.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/forgot-password.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/js/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/js/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/log.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/log.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/messages.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/messages.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/news.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/news.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/news_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/news_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/reset_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/reset_password.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/reviews.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/reviews.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/search_demo.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/search_demo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/template_demo.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/template_demo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/users.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/users.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/vulns.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/vulns.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;moresuo&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/moresuo/new_code.git&quot;,
+    &quot;accountId&quot;: &quot;67e765b0-5a52-42ba-a0d3-02d7b15c1149&quot;
+  }
+}</component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3DmvA6l1GFOzZkbYskRBybcFv3t" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "PHP 内置 Web 服务器.moresuo.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.web.browsers",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="moresuo" type="PhpBuiltInWebServerConfigurationType" factoryName="PHP Built-in Web Server" document_root="$PROJECT_DIR$/api" port="8082">
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="f01e57b6-5b33-45ec-9719-4c79d85f747f" name="更改" comment="" />
+      <created>1778899912686</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1778899912686</updated>
+      <workItem from="1778899913832" duration="340000" />
+      <workItem from="1778900269607" duration="16601000" />
+    </task>
+    <task id="LOCAL-00001" summary="1">
+      <option name="closed" value="true" />
+      <created>1778900095271</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1778900095271</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="1" />
+    <option name="LAST_COMMIT_MESSAGE" value="1" />
+  </component>
+</project>

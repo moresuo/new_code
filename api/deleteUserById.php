@@ -1,9 +1,14 @@
 <?php
     include __DIR__."/tools/DB.php";
     include __DIR__."/tools/cors.php";
+    include __DIR__."/tools/authorization.php";
+
     $id = @$_GET['id'];
-    $operatorUid = @$_GET['operatorUid'];
+    $uid = @$_GET['uid'];
+    $role = @$_GET['role'];
     $operatorName = @$_GET['operatorName'];
+
+    authorization($uid, $role);
     if (isset($id) && !empty($id)) {
         $sql1 = "select status from user where id = '$id'";
         $db = new DB();
@@ -15,7 +20,7 @@
                 $sql2 = "update user set status = 'false' where id = '$id'";    
                 $result2 = $db -> delete($sql2);
                 if ($result2) {
-                    $db->insert("insert into log(uid,username,action,time) values('$operatorUid','$operatorName','删除用户ID：$id',NOW())");
+                    $db->insert("insert into log(uid,username,action,time) values('$uid','$operatorName','删除用户ID：$id',NOW())");
                     echo json_encode([
                         "status" => 200,
                         "msg" => "删除成功"

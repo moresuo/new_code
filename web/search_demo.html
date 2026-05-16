@@ -11,12 +11,7 @@
         <h1>SQL 注入演示</h1>
         <p class="note">UNION联合查询注入 — 响应中回显完整SQL语句便于学习</p>
     </header>
-    <nav>
-        <a href="index.html">首页</a>
-        <a href="vulns.html">漏洞中心</a>
-        <a href="search_demo.html">SQL注入</a>
-        <a href="messages.html">留言板</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <div class="tips">
             <h3>常用注入Payload：</h3>
@@ -58,6 +53,8 @@
 <script src="./js/utils.js"></script>
     <script>
         $(function(){
+            var cookie = cookieToJson(document.cookie);
+            $(".nav_menu").html(getNavHtml(cookie));
             $(".search-btn").click(function(){
                 var kw = $("#keywordInput").val();
                 if (!kw) { alert("请输入搜索关键词"); return; }

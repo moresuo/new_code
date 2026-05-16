@@ -2,9 +2,14 @@
 /** [!] 漏洞文件 — 存在安全漏洞，详情见 CLAUDE.md */
     include __DIR__."/tools/DB.php";
     include __DIR__."/tools/cors.php";
+    include __DIR__."/tools/authorization.php";
+
     $nid = @$_GET['nid'];
     $uid = @$_GET['uid'];
+    $role = @$_GET['role'];
     $username = @$_GET['username'];
+
+    authorization($uid, $role);
     if (isset($nid) && !empty($nid)) {
         $sql1 = "select * from new where id = '$nid'";
         $db = new DB();

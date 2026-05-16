@@ -11,10 +11,7 @@
         <h1>评论管理</h1>
         <p>审核和管理用户评论</p>
     </header>
-    <nav>
-        <a href="index.html">返回首页</a>
-        <a href="news.html">新闻管理</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <h2>评论列表</h2>
         <table>
@@ -49,15 +46,21 @@
 <script src="./js/utils.js"></script>
 <script>
     $(function () {
-        let cookie = cookieToJson(document.cookie)
+        var cookie = cookieToJson(document.cookie)
+        $(".nav_menu").html(getNavHtml(cookie));
         getReviewInfoByNid()
     })
     function getReviewInfoByNid() {
+        let cookie = cookieToJson(document.cookie)
         $.ajax({
             url: API_BASE + "/reviewList.php",
             type: "GET",
             xhrFields: { // AJAX 携带cookie !!!
                 withCredentials: true,
+            },
+            data: {
+                uid: cookie.uid,
+                role: cookie.role
             },
             dataType: "json",
             success: (response) => {
@@ -86,6 +89,7 @@
         })
     }
     function deleteReviewById(rid) {
+        let cookie = cookieToJson(document.cookie)
         $.ajax({
             url: API_BASE + "/deleteReviewById.php",
             type: "GET",
@@ -93,7 +97,9 @@
                 withCredentials: true,
             },
             data : {
-                rid : rid
+                rid : rid,
+                uid : cookie.uid,
+                role : cookie.role
             },
             dataType: "json",
             success: (response) => {

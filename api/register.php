@@ -12,7 +12,8 @@
     $captchaCodes = $_SESSION['captcha'];
 
     if (isset($username) && !empty($username) && isset($captcha) && !empty($captcha) && isset($email) && !empty($email)  && isset($password) && !empty($password) && isset($passwordtoo) && !empty($passwordtoo) && $password == $passwordtoo) {
-        if (strtolower($captcha) == strtolower($captchaCodes)) {
+        // [!] 逻辑漏洞：验证码判断条件写反（!= 应为 ==），任意验证码均可注册
+        if (strtolower($captcha) != strtolower($captchaCodes)) {
             $sql = "insert into user(username,password,email,role,status,register) value('$username','$password','$email ','user','true',NOW())";
             $db = new DB();
             $result = $db->insert($sql);

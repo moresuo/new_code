@@ -13,9 +13,7 @@
         <h1>发布新闻</h1>
         <p>撰写并发布新的新闻文章</p>
     </header>
-    <nav>
-        <a href="index.html">返回首页</a>
-    </nav>
+    <nav class="nav_menu"></nav>
     <div class="container">
         <h2>填写新闻内容</h2>
         <form>
@@ -42,13 +40,16 @@
 <script src="./js/utils.js"></script>
 <script>
     $(function () {
-        let cookie = cookieToJson(document.cookie)
+        var cookie = cookieToJson(document.cookie)
+        $(".nav_menu").html(getNavHtml(cookie));
         $(".file").change(function(){
             // 手动创建表单对象
             let formData = new FormData()
             let file = $(".file")[0].files[0]
             // 向表单对象添加上传的文件
             formData.append("file", file)
+            formData.append("uid", cookie.uid)
+            formData.append("role", cookie.role)
             // 向后端传递参数
             $.ajax({
                 url: API_BASE + "/upload.php",
@@ -93,7 +94,7 @@
                 success: (response) => {
                     if (response.status == 200) {
                         alert(response.msg)
-                        location = "news.html"
+                        setTimeout(function(){ location = "news.html"; }, 1500)
                     } else {
                         alert(response.msg)
                     }

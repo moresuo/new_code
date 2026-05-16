@@ -1,6 +1,13 @@
 <?php
     include __DIR__."/tools/DB.php";
     include __DIR__."/tools/cors.php";
+    include __DIR__."/tools/authorization.php";
+
+    $uid = @$_GET['uid'];
+    $role = @$_GET['role'];
+
+    authorization($uid, $role);
+
     // 编写SQL语句
     $nid = @$_GET['nid'];
     $sql = "select new.id,new.title,user.username,review.id,review.context,review.time from new,user,review where review.nid = new.id and review.uid = user.id";

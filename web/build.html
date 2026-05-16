@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布新闻</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+
+<body>
+    <header>
+        <h1>发布新闻</h1>
+        <p>撰写并发布新的新闻文章</p>
+    </header>
+    <nav>
+        <a href="index.html">返回首页</a>
+    </nav>
+    <div class="container">
+        <h2>填写新闻内容</h2>
+        <form>
+            <label for="title">新闻标题：</label>
+            <input type="text" id="title" name="title" required>
+
+            <img class="newsImg" alt="新闻图片" width="200" id="news-image">
+            <label for="image">上传图片：</label>
+            <input type="file" class="file" id="image" name="image">
+
+            <label for="content">新闻内容：</label>
+            <textarea id="content" name="content" rows="10" required></textarea>
+
+            <input class="submit" type="button" value="发布新闻">
+        </form>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        let cookie = cookieToJson(document.cookie)
+        $(".file").change(function(){
+            // 手动创建表单对象
+            let formData = new FormData()
+            let file = $(".file")[0].files[0]
+            // 向表单对象添加上传的文件
+            formData.append("file", file)
+            // 向后端传递参数
+            $.ajax({
+                url: API_BASE + "/upload.php",
+                type: "POST",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType:'json',
+                success: (response) => {
+                    if (response.status == 200) {
+                        $(".newsImg").attr("src",response.url);
+                    }else {
+                        alert("上传失败");
+                    }
+                },
+                error: (response) => {
+                    alert("上传失败");
+                }
+            })
+        })
+
+        $(".submit").click(function () {
+            console.log(cookie);
+            $.ajax({
+                url: API_BASE + "/addNew.php",
+                type: "POST",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                data: {
+                    uid : cookie.uid,
+                    role : cookie.role,
+                    username : cookie.username,
+                    title: $("#title").val(),
+                    newImg: $(".newsImg").attr("src"),
+                    context:  $("#content").val(),
+                },
+                dataType: "json",
+                success: (response) => {
+                    if (response.status == 200) {
+                        alert(response.msg)
+                        location = "news.html"
+                    } else {
+                        alert(response.msg)
+                    }
+                },
+                error: (response) => {
+                    console.log(response);
+                }
+            })
+        })
+    })
+
+    
+
+</script>
+
+</html>

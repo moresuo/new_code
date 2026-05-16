@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻详情</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+
+<body>
+    <header>
+        <h1>新闻详情</h1>
+        <p>深入了解每一条新闻的背后故事</p>
+    </header>
+    <nav>
+        <a href="index.html">返回首页</a>
+    </nav>
+    <div class="container">
+        <div class="news-articles">
+            <div class="news-article">
+                <!-- <img class="new_img"  src="https://via.placeholder.com/1200x630" alt="新闻图片">
+                <h1 class="title">新闻标题</h1>
+                <p class="meta">发布作者：<span class="newauther">admin</span></p>
+                <p class="meta">发布时间：<span class="newtime"></span></p>
+                <p class="newcontent">这里是新闻的详细内容，通常会包含新闻的全文，包括引言、正文和结论。</p> -->
+            </div>
+        </div>
+        <div class="comments">
+            <div class="comment">
+                <p>asddasd</p>
+                <p><span>dlrb</span> | <span>1</span></p>
+                <hr>
+            </div>
+        </div>
+        <div class="section comment-form">
+            <h2>发表评论</h2>
+            <form>
+                <label for="comment">评论：</label>
+                <textarea id="context" name="comment" required></textarea>
+                <input type="button" class="buildreview" value="提交评论">
+            </form>
+        </div>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        // 获得浏览器地址栏的参数
+        const params = new URLSearchParams(window.location.search);
+        let nid = params.get("nid")
+        let cookie = cookieToJson(document.cookie)
+        getNewInfoById(nid)
+        getReviewInfoByNid(nid)
+        $(".buildreview").click(function(){
+            $.ajax({
+                url: API_BASE + "/buildReview.php",
+                type: "GET",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                data: {
+                    nid: nid,
+                    uid: cookie.uid,
+                    context : $("#context").val()
+                },
+                dataType: "json",
+                success: (response) => {
+                    alert(response.msg)
+                    getReviewInfoByNid(nid)
+                    $("#context").val("")
+                },
+                error: (response) => {
+                    console.log(response);
+                }
+            })
+        })
+    })
+    function getNewInfoById(nid) {
+        $.ajax({
+            url: API_BASE + "/newList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data: {
+                nid: nid
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let news = response.data[0];
+                    $(".news-articles").html(`
+                    <div class="news-article">
+                        <img class="new_img"  src="${news.newImg}" width=200 alt="新闻图片">
+                        <h1 class="title">${news.title}</h1>
+                        <p class="meta">发布作者：<span class="newauther">${news.username}</span></p>
+                        <p class="meta">发布时间：<span class="newtime">${news.time}</span></p>
+                        <p class="newcontent">${news.context}</p>
+                    </div>
+                    `)
+                } else {
+                    $(".news-articles").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+    function getReviewInfoByNid(nid) {
+        $.ajax({
+            url: API_BASE + "/reviewList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data: {
+                nid: nid
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let review = response.data;
+                    let tempstr = ""
+                    for (let item of review) {
+                        tempstr += `
+                            <div class="comment">
+                                <p>${item.context}</p>
+                                <p><span>${item.username}</span> | <span>${item.time}</span></p>
+                                <hr>
+                            </div>
+                    `
+                    }
+                    $(".comments").html(tempstr)
+                } else {
+                    $(".comments").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+    
+</script>
+
+</html>

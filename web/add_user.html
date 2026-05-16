@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加用户</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+
+<body>
+    <header>
+        <h1>添加用户</h1>
+        <p>创建新的系统用户账户</p>
+    </header>
+    <nav>
+        <a href="index.html">返回首页</a>
+        <a href="users.html">用户管理</a>
+    </nav>
+    <div class="container">
+        <h2>添加新用户</h2>
+        <form>
+            <label for="username">用户名：</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email">邮箱：</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">密码：</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm_password">确认密码：</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+
+            <label for="role">角色：</label>
+            <select id="role" name="role">
+                <option value="admin">管理员</option>
+                <option value="user">用户</option>
+            </select>
+
+            <input type="button" class="adduser" value="添加用户">
+        </form>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        let cookie = cookieToJson(document.cookie);
+        $(".adduser").click(function () {
+            $.ajax({
+                url: API_BASE + "/addUser.php",
+                type: "POST",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                data: {
+                    username: $("#username").val(),
+                    email: $("#email").val(),
+                    role: $("#role").val(),
+                    password: $("#password").val(),
+                    passwordtoo: $("#confirm_password").val(),
+                    operatorUid: cookie.uid,
+                    operatorName: cookie.username
+                },
+                dataType: "json",
+                success: (response) => {
+                    if (response.status == 200) {
+                        alert(response.msg)
+                        location = "users.html"
+                    } else {
+                        alert(response.msg)
+                    }
+                },
+                error: (response) => {
+                    console.log(response)
+                }
+            })
+        })
+    })
+
+
+
+    
+</script>
+
+</html>

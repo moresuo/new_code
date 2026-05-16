@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件管理</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+
+</head>
+
+<body>
+    <header>
+        <h1>文件管理</h1>
+        <p>上传、查看和管理服务器文件</p>
+    </header>
+    <nav>
+        <a href="index.html">返回首页</a>
+    </nav>
+    <div class="container">
+        <h2>文件列表</h2>
+        <ul class="file-list">
+            <li>
+                <span>qwrtqwrewtre.png</span>
+                <span>128kb</span>
+                <span>image/png</span>
+            </li>
+            <!-- 复制上面的 <li> 来创建更多的文件条目 -->
+        </ul>
+
+        <h2>上传文件</h2>
+        <form>
+            <input type="file" accept="image/jpeg,image/png" class="file" name="file">
+            <input type="button" class="upload" value="上传文件">
+        </form>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function ($) {
+        readFileList()
+        $(".upload").click(function () {
+            // 手动创建表单对象
+            let formData = new FormData()
+            let file = $(".file")[0].files[0]
+            // 向表单对象添加上传的文件
+            formData.append("file", file)
+            // 向后端传递参数
+            $.ajax({
+                url: API_BASE + "/upload.php",
+                type: "POST",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType:'json',
+                success: (response) => {
+                    if (response.status == 200) {
+                        alert("上传成功");
+                        readFileList()
+                    }else {
+                        alert("上传失败");
+                    }
+                },
+                error: (response) => {
+                    alert("上传失败");
+                }
+            })
+        })
+    })
+
+    function deleteFileByName(filename) {
+        $.ajax({
+            url: API_BASE + "/deleteFileByName.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data : {
+                filename : filename
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    alert(response.msg)
+                    readFileList()
+                }else {
+                    alert(response.msg)
+                }
+            },
+            errot: (response) => {
+                console.log(response)
+            }
+        })
+    }
+    function readFileList() {
+        $.ajax({
+            url: API_BASE + "/fileList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let tempstr = "";
+                    for(let item of response.data){
+                        tempstr += `
+                            <li>
+                                <img src='${item.download_url}' width='150'>
+                                <a href='${item.download_url}' class='${item.filename}'>${item.filename}</a>
+                                <span>${item.filesize}</span>
+                                <span>${item.filetype}</span>
+                                <button onclick="copyLink('${item.download_url}')")">复制路径</button>
+                                <button onclick="deleteFileByName('${item.filename}')">删除</button>
+                            </li>
+                        `
+                    }
+                    $(".file-list").html(tempstr)
+                } else {
+                    $(".file-list").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+</script>
+
+</html>

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh pr *)",
+      "Skill(update-config)",
+      "Bash(node *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are a code auditor for a PHP news management vulnerability demo platform (靶场). A file was just modified. Perform a brief code audit:\n\n1. SECURITY: The project INTENTIONALLY contains vulnerabilities (SQL injection, XSS, IDOR, file upload, path traversal, LFI, logic flaws). Verify intentional vulns are preserved. Flag anything that looks like it could be a REAL production vulnerability added by accident (e.g., exposed credentials visible to end users beyond the hardcoded demo ones, remote code execution that's not part of the demo).\n\n2. CONSISTENCY: Does the change follow the project's existing patterns? (pure PHP no framework, jQuery frontend, string-concatenation SQL, JSON API responses)\n\n3. CLAUDE.md: Should CLAUDE.md be updated to reflect this change? If the change adds/removes/modifies a feature, endpoint, vulnerability, or design pattern, note it.\n\nReport findings concisely. If CLAUDE.md needs updating, say exactly what section and what to add/change.\n\nChanged file: $ARGUMENTS",
+            "timeout": 60,
+            "statusMessage": "正在审计代码变更..."
+          }
+        ]
+      }
+    ]
+  }
+}

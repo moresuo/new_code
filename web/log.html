@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日志记录</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+<body>
+    <header>
+        <h1>系统日志</h1>
+        <p>查看用户操作记录和系统活动</p>
+    </header>
+    <nav>
+        <a href="index.html">首页</a>
+    </nav>
+    <div class="container">
+        <div class="search-box">
+            <input type="text" class="searchinput" placeholder="搜索用户或操作内容...">
+            <input type="button" class="search" value="搜索">
+        </div>
+        <div class="logs">
+            <h2>系统日志</h2>
+            <div class="log-list"></div>
+        </div>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        getLogList();
+        $(".search").click(function () {
+            searchLogList($(".searchinput").val());
+        });
+    });
+
+    function getLogList() {
+        $.ajax({
+            url: API_BASE + "/logList.php",
+            type: "GET",
+            xhrFields: { withCredentials: true },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let tempstr = "";
+                    for (let item of response.data) {
+                        tempstr += `
+                        <div class="log-entry">
+                            <span class="log-time">${item.time}</span>
+                            <p>${item.username} ${item.action}</p>
+                        </div>
+                        `;
+                    }
+                    $(".log-list").html(tempstr);
+                } else {
+                    $(".log-list").html(`<p style='color:red;'>${response.msg}</p>`);
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        });
+    }
+
+    function searchLogList(search) {
+        $.ajax({
+            url: API_BASE + "/logList.php",
+            type: "GET",
+            xhrFields: { withCredentials: true },
+            data: { search: search },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let tempstr = "";
+                    for (let item of response.data) {
+                        tempstr += `
+                        <div class="log-entry">
+                            <span class="log-time">${item.time}</span>
+                            <p>${item.username} ${item.action}</p>
+                        </div>
+                        `;
+                    }
+                    $(".log-list").html(tempstr);
+                } else {
+                    $(".log-list").html(`<p style='color:red;'>${response.msg}</p>`);
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        });
+    }
+</script>
+</html>

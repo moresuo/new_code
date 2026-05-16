@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+
+<body>
+    <header>
+        <h1>用户管理</h1>
+        <p>管理系统中的所有注册用户</p>
+    </header>
+    <nav>
+        <a href="index.html">返回首页</a>
+        <a href="add_user.html">添加用户</a>
+    </nav>
+    <div class="container">
+        <div class="search-box">
+            <form>
+                <input type="text" class="searchinput" placeholder="搜索用户名...">
+                <button type="button" class="search btn">查询</button>
+            </form>
+        </div>
+        <h2>用户列表</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>用户名</th>
+                    <th>邮箱</th>
+                    <th>角色</th>
+                    <th>注册日期</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="tbody">
+                <tr>
+                    <td>admin</td>
+                    <td>admin@qq.com</td>
+                    <td>admin</td>
+                    <td>2024-01-01</td>
+                    <td>true</td>
+                    <td class="actions">
+                        <a href="edit_user.html?uid=${item.id}" class="edit">编辑</a>
+                        <a href="javascript:void(0);" class="delete">删除</a>
+                        <a href="reset_password.html?uid=${item.id}" class="reset-password">重置密码</a>
+                    </td>
+                </tr>
+            </tbody>
+            <!-- 复制上面的 <tr> 来创建更多的用户条目 -->
+        </table>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        getUserList()
+        $(".search").click(function () {
+            searchUserList($(".searchinput").val())
+        });
+    })
+
+
+    function getUserList() {
+        $.ajax({
+            url: API_BASE + "/userList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let tempstr = "";
+                    for (let item of response.data) {
+                        tempstr += `
+                            <tr>
+                                <td>${item.username}</td>
+                                <td>${item.email}</td>
+                                <td>${item.role}</td>
+                                <td>${item.register}</td>
+                                <td>${item.status}</td>
+                                <td class="actions">
+                                    <a href="edit_user.html?uid=${item.id}" class="edit">编辑</a>
+                                    <a href="javascript:void(0);" onclick="deleteUserById('${item.id}')" class="delete">删除</a>
+                                    <a href="reset_password.html?uid=${item.id}" class="reset-password">重置密码</a>
+                                </td>
+                            </tr>
+                        `
+                    }
+                    $(".tbody").html(tempstr)
+                } else {
+                    $(".tbody").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+
+    function searchUserList(search) {
+        $.ajax({
+            url: API_BASE + "/userList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data: {
+                search : search
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let tempstr = "";
+                    for (let item of response.data) {
+                        tempstr += `
+                            <tr>
+                                <td>${item.username}</td>
+                                <td>${item.email}</td>
+                                <td>${item.role}</td>
+                                <td>${item.register}</td>
+                                <td>${item.status}</td>
+                                <td class="actions">
+                                    <a href="edit_user.html?uid=${item.id}" class="edit">编辑</a>
+                                    <a href="javascript:void(0);"  onclick="deleteUserById('${item.id}')" class="delete">删除</a>
+                                    <a href="reset_password.html?uid=${item.id}" class="reset-password">重置密码</a>
+                                </td>
+                            </tr>
+                        `
+                    }
+                    $(".tbody").html(tempstr)
+                } else {
+                    $(".tbody").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+    function deleteUserById(uid) {
+        let cookie = cookieToJson(document.cookie);
+        $.ajax({
+            url: API_BASE + "/deleteUserById.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data : {
+                id : uid,
+                operatorUid : cookie.uid,
+                operatorName : cookie.username
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    alert(response.msg)
+                    getUserList();
+                }else {
+                    alert(response.msg)
+                }
+            },
+            error: (response) => {
+                console.log(response)
+            }
+        })
+    }
+
+    
+
+</script>
+
+</html>

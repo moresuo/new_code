@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑用户</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+
+<body>
+    <header>
+        <h1>编辑用户</h1>
+        <p>修改用户角色和状态信息</p>
+    </header>
+    <nav>
+        <a href="index.html">返回首页</a>
+        <a href="users.html">用户管理</a>
+    </nav>
+    <div class="container">
+        <h2>编辑用户信息</h2>
+        <form action="#" method="post">
+            <label for="username">用户名：</label>
+            <input type="text" id="username" name="username" value="用户名" readonly>
+
+            <label for="email">邮箱：</label>
+            <input type="email" id="email" name="email" value="user@example.com" required>
+
+            <label for="role">角色：</label>
+            <select id="role" name="role">
+                <option value="admin">管理员</option>
+                <option value="user">用户</option>
+            </select>
+
+            <label for="status">状态：</label>
+            <select id="status" name="status">
+                <option value="true">激活</option>
+                <option value="false">未激活</option>
+            </select>
+
+            <input type="button" class="update" value="更新用户">
+        </form>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        // 获得浏览器地址栏的参数
+        const params = new URLSearchParams(window.location.search);
+        let uid = params.get("uid")
+        getUserInfoById(uid)
+
+        $(".update").click(function () {
+            $.ajax({
+                url: API_BASE + "/updateUserById.php",
+                type: "POST",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                data: {
+                    uid: uid,
+                    username: $("#username").val(),
+                    email: $("#email").val(),
+                    role:  $("#role").val(),
+                    status:  $("#status").val()
+                },
+                dataType: "json",
+                success: (response) => {
+                    if (response.status == 200) {
+                        alert(response.msg)
+                        location = "users.html"
+                    } else {
+                        alert(response.msg)
+                    }
+                },
+                error: (response) => {
+                    console.log(response);
+                }
+            })
+        })
+    })
+    function getUserInfoById(uid) {
+        $.ajax({
+            url: API_BASE + "/userList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data: {
+                uid: uid
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let user = response.data[0];
+                    $("#username").val(user.username);
+                    $("#email").val(user.email);
+                    $("#role").val(user.role);
+                    $("#status").val(user.status);
+                } else {
+                    $(".tbody").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+</script>
+
+</html>

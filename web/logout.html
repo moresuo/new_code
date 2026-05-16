@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>退出登录</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+
+<body>
+    <header>
+        <h1>退出登录</h1>
+        <p>确认要离开吗？</p>
+    </header>
+    <div class="container">
+        <form>
+            <h2>您确定要退出登录吗？</h2>
+            <p>退出后您将返回到网站首页，需要重新登录才能访问管理功能。</p>
+            <input type="button" class="logout" value="退出登录">
+        </form>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function(){
+        $(".logout").click(function(){
+            $.ajax({
+                url: API_BASE + "/logout.php",
+                type: "POST",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                dataType: "json",
+                success: (response) => {
+                    if (response.status == 200) {
+                        alert(response.msg)
+                        deleteCookies(['uid','username','role'])
+                        location = "index.html"
+                    } else {
+                        alert(response.msg)
+                    }
+                },
+                error: (response) => {
+                    console.log(response)
+                }
+            })
+        })
+    })
+
+    function deleteCookies(names) {
+        const expireDate = 'Thu, 01 Jan 1970 00:00:00 UTC';
+        for (const name of names) {
+            document.cookie = `${name}=; expires=${expireDate}; path=/`;
+        }
+    }
+</script>
+
+
+</html>

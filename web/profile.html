@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息 — 越权演示</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+<body>
+    <header>
+        <h1>个人信息</h1>
+        <p class="note">[!] 水平越权(IDOR)演示 — 修改uid参数可查看任意用户信息</p>
+    </header>
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="vulns.html">漏洞中心</a>
+        <a href="profile.html">越权演示</a>
+        <a href="messages.html">留言板</a>
+    </nav>
+    <div class="container">
+        <div class="warning">
+            [!] 漏洞说明：通过修改URL参数 <code>?uid=xxxx</code> 可查看任意用户的信息（包括admin）。后端无所有权校验，不验证当前登录用户是否有权查看。
+        </div>
+        <div class="section">
+            <h2>用户信息查询</h2>
+            <div class="form-group">
+                <label>用户ID (UID)：</label>
+                <input type="text" id="uidInput" placeholder="输入UID查看该用户信息，如 202601001">
+            </div>
+            <button class="btn query-btn">查询</button>
+        </div>
+        <div class="section">
+            <h2>查询结果</h2>
+            <div class="info-area"></div>
+        </div>
+        <div class="section">
+            <h2>修改邮箱（越权修改）</h2>
+            <p class="hint-text">可修改任意用户的邮箱地址，无需权限验证。</p>
+            <div class="form-group">
+                <label>目标用户ID：</label>
+                <input type="text" id="targetUid" placeholder="要修改的用户ID">
+            </div>
+            <div class="form-group">
+                <label>新邮箱：</label>
+                <input type="text" id="newEmail" placeholder="新的邮箱地址">
+            </div>
+            <button class="btn update-btn">修改</button>
+        </div>
+    </div>
+    <footer>版权所有 © 2024 新闻网站 | 越权漏洞演示</footer>
+
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+    <script>
+        $(function(){
+            // 从URL读取uid参数
+            var params = new URLSearchParams(window.location.search);
+            var uid = params.get("uid");
+            if (uid) { $("#uidInput").val(uid); queryUser(uid); }
+
+            $(".query-btn").click(function(){
+                var u = $("#uidInput").val();
+                if (!u) { alert("请输入UID"); return; }
+                // 更新URL参数
+                window.history.pushState({}, '', '?uid=' + u);
+                queryUser(u);
+            });
+
+            $(".update-btn").click(function(){
+                var u = $("#targetUid").val();
+                var e = $("#newEmail").val();
+                if (!u || !e) { alert("请填写目标UID和新邮箱"); return; }
+                $.ajax({
+                    url: API_BASE + "/updateProfile.php",
+                    type: "POST",
+                    data: { uid: u, email: e },
+                    dataType: "json",
+                    success: function(r){ alert(r.msg); },
+                    error: function(r){ console.log(r); }
+                });
+            });
+        });
+
+        function queryUser(uid){
+            $.ajax({
+                url: API_BASE + "/myInfo.php",
+                type: "GET",
+                data: { uid: uid },
+                dataType: "json",
+                success: function(r){
+                    if (r.status == 200) {
+                        var u = r.data;
+                        var html = '<div class="info-row"><span class="label">用户ID</span><span class="value">' + u.id + '</span></div>' +
+                            '<div class="info-row"><span class="label">用户名</span><span class="value">' + u.username + '</span></div>' +
+                            '<div class="info-row"><span class="label">邮箱</span><span class="value">' + u.email + '</span></div>' +
+                            '<div class="info-row"><span class="label">角色</span><span class="value">' + u.role + '</span></div>' +
+                            '<div class="info-row"><span class="label">状态</span><span class="value">' + u.status + '</span></div>' +
+                            '<div class="info-row"><span class="label">注册时间</span><span class="value">' + u.register + '</span></div>';
+                        // 自动填充修改表单
+                        $("#targetUid").val(u.id);
+                        $(".info-area").html(html);
+                    } else {
+                        $(".info-area").html('<p style="color:#ff00ff;">' + r.msg + '</p>');
+                    }
+                },
+                error: function(r){ console.log(r); }
+            });
+        }
+    </script>
+</html>

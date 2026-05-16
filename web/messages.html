@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>留言板 — XSS演示</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+<body>
+    <header>
+        <h1>留言板</h1>
+        <p class="note">[!] 此页面内容未经任何过滤，直接输出，用于演示存储型XSS攻击</p>
+    </header>
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="vulns.html">漏洞中心</a>
+        <a href="messages.html">留言板</a>
+        <a href="search_demo.html">SQL注入</a>
+        <a href="profile.html">越权演示</a>
+    </nav>
+    <div class="container">
+        <div class="warning">
+            [!] 漏洞说明：留言内容无过滤直接写入数据库，前端使用 innerHTML 渲染，可执行任意 JavaScript 代码。尝试提交 <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+        </div>
+        <div class="section">
+            <h2>发表留言</h2>
+            <div class="form-group">
+                <label>昵称：</label>
+                <input type="text" id="name" placeholder="输入你的昵称">
+            </div>
+            <div class="form-group">
+                <label>内容：</label>
+                <textarea id="content" placeholder="输入留言内容..."></textarea>
+            </div>
+            <button class="btn send-btn">提交留言</button>
+        </div>
+        <div class="section">
+            <h2>留言列表</h2>
+            <div class="message-list"></div>
+        </div>
+    </div>
+    <footer>版权所有 © 2024 新闻网站 | XSS漏洞演示</footer>
+
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+    <script>
+        $(function(){
+            loadMessages();
+            $(".send-btn").click(function(){
+                var name = $("#name").val();
+                var content = $("#content").val();
+                if (!name || !content) { alert("请填写昵称和内容"); return; }
+                $.ajax({
+                    url: API_BASE + "/sendMessage.php",
+                    type: "GET",
+                    data: { name: name, content: content },
+                    dataType: "json",
+                    success: function(r){
+                        if (r.status == 200) {
+                            $("#content").val("");
+                            loadMessages();
+                        } else { alert(r.msg); }
+                    },
+                    error: function(r){ console.log(r); }
+                });
+            });
+        });
+
+        function loadMessages(){
+            $.ajax({
+                url: API_BASE + "/messageList.php",
+                type: "GET",
+                dataType: "json",
+                success: function(r){
+                    if (r.status == 200) {
+                        var html = "";
+                        for (var i = 0; i < r.data.length; i++) {
+                            var m = r.data[i];
+                            // [!] XSS漏洞点：直接使用innerHTML，无任何转义
+                            html += '<div class="message-card">' +
+                                '<div class="msg-name">' + m.name + '</div>' +
+                                '<div class="msg-time">' + m.time + '</div>' +
+                                '<div class="msg-content">' + m.content + '</div>' +
+                            '</div>';
+                        }
+                        $(".message-list").html(html);
+                    } else {
+                        $(".message-list").html('<p style="color:#555;">暂无留言</p>');
+                    }
+                },
+                error: function(r){ console.log(r); }
+            });
+        }
+    </script>
+</html>

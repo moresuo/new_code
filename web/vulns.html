@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漏洞演示中心</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+<body>
+    <header>
+        <h1>漏洞演示中心</h1>
+        <p>网络安全靶场 — 仅供安全测试学习使用</p>
+    </header>
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="vulns.html">漏洞中心</a>
+        <a href="messages.html">留言板</a>
+        <a href="search_demo.html">SQL注入</a>
+        <a href="upload_demo.html">文件上传</a>
+        <a href="download.html">文件下载</a>
+        <a href="template_demo.html">文件包含</a>
+        <a href="profile.html">越权演示</a>
+    </nav>
+    <div class="container">
+
+        <div class="section">
+            <h2>SQL 注入</h2>
+            <div class="vuln-grid">
+                <div class="vuln-card">
+                    <h3>新闻搜索注入</h3>
+                    <span class="tag sql">UNION查询</span><span class="tag">回显注入</span>
+                    <p>专门用于联合查询注入演示的搜索接口，响应中返回完整SQL语句，便于理解注入原理。</p>
+                    <a href="search_demo.html">进入演示 →</a>
+                    <div class="tip-box">提示：keyword=' UNION SELECT 1,2,3,4,5,6--</div>
+                </div>
+                <div class="vuln-card">
+                    <h3>登录绕过</h3>
+                    <span class="tag sql">布尔盲注</span><span class="tag">万能密码</span>
+                    <p>登录接口使用字符串拼接SQL，可使用万能密码或布尔盲注绕过认证。</p>
+                    <a href="login.html">进入演示 →</a>
+                    <div class="tip-box">提示：username=admin' OR '1'='1' --</div>
+                </div>
+                <div class="vuln-card">
+                    <h3>用户列表注入</h3>
+                    <span class="tag sql">LIKE注入</span><span class="tag">报错注入</span>
+                    <p>用户搜索接口使用LIKE模糊匹配，可进行报错注入或时间盲注。</p>
+                    <a href="users.html">进入演示 →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>XSS 跨站脚本</h2>
+            <div class="vuln-grid">
+                <div class="vuln-card">
+                    <h3>留言板（存储型XSS）</h3>
+                    <span class="tag xss">存储型</span><span class="tag">无过滤</span>
+                    <p>留言内容无任何过滤直接入库，前端innerHTML渲染不转义，可执行任意JavaScript。</p>
+                    <a href="messages.html">进入演示 →</a>
+                    <div class="tip-box">提示：提交&lt;script&gt;alert(1)&lt;/script&gt;作为留言内容</div>
+                </div>
+                <div class="vuln-card">
+                    <h3>新闻内容XSS</h3>
+                    <span class="tag xss">存储型</span><span class="tag">反射型</span>
+                    <p>新闻标题和内容通过innerHTML直接渲染，可在新闻中嵌入恶意脚本。</p>
+                    <a href="index.html">进入演示 →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>越权漏洞</h2>
+            <div class="vuln-grid">
+                <div class="vuln-card">
+                    <h3>水平越权 — 个人信息查看</h3>
+                    <span class="tag">IDOR</span><span class="tag">水平越权</span>
+                    <p>通过修改uid参数即可查看任意用户的详细信息，无所有权校验。</p>
+                    <a href="profile.html">进入演示 →</a>
+                    <div class="tip-box">提示：修改?uid=202601001 查看admin用户信息</div>
+                </div>
+                <div class="vuln-card">
+                    <h3>垂直越权 — 用户管理</h3>
+                    <span class="tag">垂直越权</span><span class="tag">权限绕过</span>
+                    <p>updateUserById.php无权限校验，普通用户可把自己role改为admin。</p>
+                    <a href="users.html">进入演示 →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>文件漏洞</h2>
+            <div class="vuln-grid">
+                <div class="vuln-card">
+                    <h3>文件上传漏洞</h3>
+                    <span class="tag">任意上传</span>
+                    <p>upload.php无文件类型校验，可上传PHP webshell获取服务器控制权。</p>
+                    <a href="files.html">进入演示 →</a>
+                    <div class="tip-box">提示：上传 .php 文件后直接访问 upload/xxx.php</div>
+                </div>
+                <div class="vuln-card">
+                    <h3>文件下载（路径遍历）</h3>
+                    <span class="tag">路径遍历</span><span class="tag">任意读取</span>
+                    <p>download.php的filename参数未过滤../，可读取服务器任意文件。</p>
+                    <a href="download.html">进入演示 →</a>
+                    <div class="tip-box">提示：?filename=../tools/database.config.php</div>
+                </div>
+                <div class="vuln-card">
+                    <h3>文件包含(LFI)</h3>
+                    <span class="tag">LFI</span><span class="tag">本地包含</span>
+                    <p>template.php接受page参数直接include，可包含任意文件并执行其中PHP代码。</p>
+                    <a href="template_demo.html">进入演示 →</a>
+                    <div class="tip-box">提示：?page=../tools/database.config 读取DB配置</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>逻辑漏洞</h2>
+            <div class="vuln-grid">
+                <div class="vuln-card">
+                    <h3>验证码万能绕过</h3>
+                    <span class="tag">逻辑缺陷</span>
+                    <p>登录接口存在万能验证码 0000，输入即可绕过验证码校验。</p>
+                    <a href="login.html">进入演示 →</a>
+                </div>
+                <div class="vuln-card">
+                    <h3>密码重置无校验</h3>
+                    <span class="tag">逻辑缺陷</span>
+                    <p>resetPassword.php无需旧密码即可重置任意用户密码，仅需知道uid。</p>
+                    <a href="reset_password.html">进入演示 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>版权所有 © 2024 新闻网站 | 网络安全靶场</footer>
+</body>
+</html>

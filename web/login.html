@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+
+<body>
+    <header>
+        <h1>用户登录</h1>
+        <p>欢迎回来，请输入您的账号信息</p>
+    </header>
+    <div class="container">
+        <form>
+            <label for="username">用户名</label>
+            <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+
+            <label for="password">密码</label>
+            <input type="password" id="password" name="password" placeholder="请输入密码" required>
+
+            <div class="captcha">
+                <label for="captcha">验证码</label>
+                <img id="captcha" alt="验证码" title="点击刷新验证码">
+            </div>
+            <input type="text" id="captcha_code" name="captcha" placeholder="输入验证码" required>
+
+            <div class="forgot-password">
+                <a href="forgot-password.html">忘记密码？</a>
+            </div>
+
+            <input type="button" value="登 录" class="login">
+
+            <p>没有账户？<a href="register.html">立即注册</a></p>
+        </form>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script>
+    $(function ($) {
+        $("#captcha").attr("src", API_BASE + "/captcha.php");
+        $("#captcha").click(function () {
+            $("#captcha").attr("src", API_BASE + "/captcha.php?t=" + Math.random())
+        })
+        $(".login").click(function () {
+            $.ajax({
+                url: API_BASE + "/login.php",
+                type: "POST",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                data : {
+                        username:$("#username").val(),
+                        password:$("#password").val(),
+                        captcha:$("#captcha_code").val()
+                },
+                dataType: "json",
+                success : (response) => {
+                    if (response.status == 200) {
+                        location = "index.html"
+                    }else {
+                        alert(response.msg);
+                        $("#captcha").attr("src", API_BASE + "/captcha.php?t=" + Math.random())
+                    }
+                },
+                error: (response) => {
+                    console.log(response);
+                }
+            })
+        })
+    })
+</script>
+
+</html>

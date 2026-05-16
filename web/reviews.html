@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评论管理</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+<body>
+    <header>
+        <h1>评论管理</h1>
+        <p>审核和管理用户评论</p>
+    </header>
+    <nav>
+        <a href="index.html">返回首页</a>
+        <a href="news.html">新闻管理</a>
+    </nav>
+    <div class="container">
+        <h2>评论列表</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>新闻标题</th>
+                    <th>用户</th>
+                    <th>评论内容</th>
+                    <th>发布时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="tbody">
+				<tr>
+					<td>新闻标题</td>
+					<td>用户</td>
+					<td>评论内容</td>
+					<td>发布时间</td>
+					<td> <a href="javascript:void(0);" onclick="deleteById('${item.id}')" class="delete">删除</a></td>
+				</tr>
+            </tbody>
+
+            <!-- 复制上面的 <tr> 来创建更多的新闻条目 -->
+        </table>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        let cookie = cookieToJson(document.cookie)
+        getReviewInfoByNid()
+    })
+    function getReviewInfoByNid() {
+        $.ajax({
+            url: API_BASE + "/reviewList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let review = response.data;
+                    let tempstr = ""
+                    for (let item of review) {
+                        tempstr += `
+                        <tr>
+                            <td>${item.title}</td>
+                            <td>${item.username}</td>
+                            <td>${item.context}</td>
+                            <td>${item.time}</td>
+                            <td> <a href="javascript:void(0);" onclick="deleteReviewById('${item.id}')" class="delete">删除</a></td>
+                        </tr>
+                    `
+                    }
+                    $(".tbody").html(tempstr)
+                } else {
+                    $(".tbody").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+    function deleteReviewById(rid) {
+        $.ajax({
+            url: API_BASE + "/deleteReviewById.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data : {
+                rid : rid
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    alert(response.msg)
+                    getReviewInfoByNid() 
+                }else {
+                    alert(response.msg)
+                }
+            },
+            errot: (response) => {
+                console.log(response)
+            }
+        })
+    }
+    
+</script>
+</html>

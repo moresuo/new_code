@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑新闻</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+
+<body>
+    <header>
+        <h1>编辑新闻</h1>
+        <p>修改新闻内容和配图</p>
+    </header>
+    <nav>
+        <a href="index.html">返回首页</a>
+    </nav>
+    <div class="container">
+        <h2>编辑新闻内容</h2>
+        <form action="#" method="post" enctype="multipart/form-data">
+            <label for="title">新闻标题：</label>
+            <input type="text" id="title" name="title" value="新闻标题" required>
+            <img class="newsImg" alt="新闻图片" width="200" id="news-image">
+            <label for="image">上传图片：</label>
+            <input type="file" class="file" id="image" name="image">
+
+            <label for="content">新闻内容：</label>
+            <textarea id="content" name="content" rows="10" required>
+                这里是新闻的详细内容，通常会包含新闻的全文，包括引言、正文和结论。
+                新闻内容可以包含多个段落，每个段落都详细描述了新闻事件的不同方面。
+            </textarea>
+
+            <input type="button" class="update" value="更新新闻">
+        </form>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        // 获得浏览器地址栏的参数
+        const params = new URLSearchParams(window.location.search);
+        let nid = params.get("nid")
+        let cookie = cookieToJson(document.cookie)
+        $(".file").change(function(){
+            // 手动创建表单对象
+            let formData = new FormData()
+            let file = $(".file")[0].files[0]
+            // 向表单对象添加上传的文件
+            formData.append("file", file)
+            // 向后端传递参数
+            $.ajax({
+                url: API_BASE + "/upload.php",
+                type: "POST",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType:'json',
+                success: (response) => {
+                    if (response.status == 200) {
+                        $(".newsImg").attr("src",response.url);
+                    }else {
+                        alert("上传失败");
+                    }
+                },
+                error: (response) => {
+                    alert("上传失败");
+                }
+            })
+        })
+
+        getNewInfoById(nid)
+
+        $(".update").click(function () {
+            $.ajax({
+                url: API_BASE + "/updateNewById.php",
+                type: "POST",
+                xhrFields: { // AJAX 携带cookie !!!
+                    withCredentials: true,
+                },
+                data: {
+                    nid: nid,
+                    uid : cookie.uid,
+                    title: $("#title").val(),
+                    newImg: $(".newsImg").attr("src"),
+                    context:  $("#content").val(),
+                },
+                dataType: "json",
+                success: (response) => {
+                    if (response.status == 200) {
+                        alert(response.msg)
+                        location = "news.html"
+                    } else {
+                        alert(response.msg)
+                    }
+                },
+                error: (response) => {
+                    console.log(response);
+                }
+            })
+        })
+    })
+    function getNewInfoById(nid) {
+        $.ajax({
+            url: API_BASE + "/newList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data: {
+                nid: nid
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let news = response.data[0];
+                    $("#title").val(news.title);
+                    $("#content").val(news.context);
+                    $(".newsImg").attr("src",news.newImg);
+                } else {
+                    $(".tbody").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+
+    
+
+</script>
+</html>

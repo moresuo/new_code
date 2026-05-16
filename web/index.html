@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+
+<body>
+    <header>
+        <h1>欢迎来到 <span class="role">新闻中心</span></h1>
+        <p>实时资讯，一手掌握</p>
+    </header>
+    <nav class="nav_menu"></nav>
+    <div class="container">
+        <div class="search-box">
+            <form>
+                <input type="text" class="searchinput" placeholder="搜索新闻标题或内容...">
+                <input type="button" class="search" value="搜索">
+            </form>
+        </div>
+        <div class="section">
+            <h2>新闻列表</h2>
+            <ul class="news-list">
+                <li>
+                    <div class="news-title">加载中...</div>
+                    <div class="news-summary">正在获取新闻数据</div>
+                    <a href="javascript:void(0)">———</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <footer>
+        <p>版权所有 © 2024 新闻网站</p>
+    </footer>
+</body>
+<script src="./js/jquery-3.7.1.min.js"></script>
+<script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+<script>
+    $(function () {
+        init()
+        getNewList()
+        $(".search").click(function () {
+            searchNewList($(".searchinput").val())
+        });
+    })
+
+    function init() {
+        var cookie = cookieToJson(document.cookie);
+        if (!cookie.uid) {
+            cookie.uid = 0;
+            cookie.role = 'user';
+            cookie.username = '访客';
+        }
+        $(".role").text(cookie.username);
+        $(".nav_menu").html(getNavHtml(cookie));
+    }
+
+    function getNewList() {
+        $.ajax({
+            url: API_BASE + "/newList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let tempstr = "";
+                    for (let item of response.data) {
+                        tempstr += `
+                        <li>
+                            <div class="news-title">${item.title}</div>
+                            <div class="news-summary">${item.context.substr(0,30)}</div>
+                            <a href="news_detail.html?nid=${item.id}">阅读详情</a>
+                        </li>
+                        `
+                    }
+                    $(".news-list").html(tempstr)
+                } else {
+                    $(".news-list").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+
+    function searchNewList(search) {
+        $.ajax({
+            url: API_BASE + "/newList.php",
+            type: "GET",
+            xhrFields: { // AJAX 携带cookie !!!
+                withCredentials: true,
+            },
+            data: {
+                search : search
+            },
+            dataType: "json",
+            success: (response) => {
+                if (response.status == 200) {
+                    let tempstr = "";
+                    for (let item of response.data) {
+                        tempstr += `
+                        <li>
+                            <div class="news-title">${item.title}</div>
+                            <div class="news-summary">${item.context.substr(0,30)}</div>
+                            <a href="news_detail.html?nid=${item.id}">阅读详情</a>
+                        </li>
+                        `
+                    }
+                    $(".news-list").html(tempstr)
+                } else {
+                    $(".news-list").html(`<p style='color:red;'>${response.msg}</p>`)
+                }
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
+    }
+
+    
+
+</script>
+</html>

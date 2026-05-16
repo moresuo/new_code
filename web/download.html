@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件下载 — 路径遍历演示</title>
+    <link rel="stylesheet" href="css/cyberpunk.css">
+</head>
+<body>
+    <header>
+        <h1>文件下载</h1>
+        <p class="note">路径遍历漏洞演示 — 通过 ../ 可读取服务器任意文件</p>
+    </header>
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="vulns.html">漏洞中心</a>
+        <a href="download.html">文件下载</a>
+        <a href="template_demo.html">文件包含</a>
+        <a href="files.html">文件管理</a>
+    </nav>
+    <div class="container">
+        <div class="tips">
+            <h3>常用测试路径：</h3>
+            <code>../tools/database.config.php  — 数据库配置</code>
+            <code>../tools/DB.php               — DB类源码</code>
+            <code>../../news.sql                — 数据库SQL文件</code>
+            <code>../../../etc/passwd           — Linux系统文件</code>
+            <code>../../../Windows/win.ini      — Windows系统文件</code>
+        </div>
+        <div class="section">
+            <h2>文件下载测试</h2>
+            <div class="form-group">
+                <label>文件路径 (filename参数)：</label>
+                <input type="text" id="filenameInput" placeholder="例：../tools/database.config.php" value="../tools/database.config.php">
+            </div>
+            <button class="btn download-btn">下载文件</button>
+            <button class="btn danger preview-btn">预览内容</button>
+            <p class="hint-text">点击"下载"触发浏览器下载，点击"预览"查看文件内容</p>
+        </div>
+        <div class="section">
+            <h2>文件内容预览</h2>
+            <div class="output-box" id="previewArea">点击"预览内容"按钮查看文件内容...</div>
+        </div>
+    </div>
+    <footer>版权所有 © 2024 新闻网站 | 路径遍历漏洞演示</footer>
+
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/config.js"></script>
+<script src="./js/utils.js"></script>
+    <script>
+        $(function(){
+            $(".download-btn").click(function(){
+                var fn = $("#filenameInput").val();
+                if (!fn) { alert("请输入文件路径"); return; }
+                window.open(API_BASE + "/download.php?filename=" + encodeURIComponent(fn), "_blank");
+            });
+            $(".preview-btn").click(function(){
+                var fn = $("#filenameInput").val();
+                if (!fn) { alert("请输入文件路径"); return; }
+                $.ajax({
+                    url: API_BASE + "/download.php",
+                    type: "GET",
+                    data: { filename: fn },
+                    success: function(data){
+                        $("#previewArea").text(data);
+                    },
+                    error: function(r){
+                        $("#previewArea").text("读取失败: " + r.statusText);
+                    }
+                });
+            });
+        });
+    </script>
+</html>
